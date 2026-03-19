@@ -1,3 +1,3 @@
- console.log("Fixed ARICS DONE");
+ console.log("Bug Fixing In ARCIS PROJECT");
  
 
