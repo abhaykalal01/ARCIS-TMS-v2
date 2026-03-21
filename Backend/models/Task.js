@@ -22,6 +22,11 @@ const TaskSchema = new moongoose.Schema({
         type: moongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true
+    },
+    status : {
+        type: String,
+        enum: ["pending", "in-progress", "completed"],
+        default: ""
     }
 })
 
