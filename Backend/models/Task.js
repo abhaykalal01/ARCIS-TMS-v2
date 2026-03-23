@@ -24,9 +24,9 @@ const TaskSchema = new moongoose.Schema({
         required: true
     },
     status : {
-        type: String,
-        enum: ["pending", "in-progress", "completed"],
-        default: ""
+        type : String,
+        enum: ["todo", "in-progress", "done"],
+        default: "todo"
     }
 })
 
