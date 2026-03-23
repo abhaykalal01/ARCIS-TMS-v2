@@ -1,4 +1,5 @@
 import Task from "../models/Task.js";
+import { createNotification } from "./notificationController.js";
 
 export const createTask = async (req, res) => {
     try {
@@ -10,7 +11,13 @@ export const createTask = async (req, res) => {
             assignedTo,
             createdBy: req.user.id
         });
-
+        await createNotification({
+            userId: assignedTo,
+            message: "You have been assigned a new task",
+            type: "task_assigned",
+            taskId: task._id,
+            createdBy: req.user.id
+        });
         res.status(201).json({
             message: "Task Created Successfully",
             task
@@ -58,6 +65,14 @@ export const updateTaskStatus = async (req, res) => {
         task.status = status;
         await task.save();
 
+        await createNotification({
+            userId: task.assignedTo,
+            message: `Task status updated to ${status}`,
+            type: "status_changed",
+            taskId: task._id,
+            createdBy: req.user.id
+        });
+
         res.json({
             message: "Task status updated successfully",
             task
@@ -79,7 +94,7 @@ export const getkanbanTasks = async (req, res) => {
                 .populate("projectId", "name");
         }
         else {
-            tasks = await tasks.find({ assignedTo: req.user.id }).populate("project", "name");
+            tasks = await Task.find({ assignedTo: req.user.id }).populate("projectId", "name");
         }
 
         const groupedTasks = {
